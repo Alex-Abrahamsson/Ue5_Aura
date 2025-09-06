@@ -10,6 +10,8 @@ UAuraAttributeSet::UAuraAttributeSet()
 	InitMaxHealth(100.0f);
 	InitMana(80.0f);
 	InitMaxMana(80.0f);
+	InitEnergy(50.f);
+	InitMaxEnergy(100.0f);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -20,6 +22,26 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Energy, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxEnergy, COND_None, REPNOTIFY_Always);
+}
+
+void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxHealth());
+	}
+	if (Attribute == GetManaAttribute())
+	{
+		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxMana());
+	}
+	if (Attribute == GetEnergyAttribute())
+	{
+		NewValue = FMath::Clamp<float>(NewValue, 0.0f, GetMaxEnergy());
+	}
 }
 
 void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
@@ -40,5 +62,15 @@ void UAuraAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana) const
 void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxMana, OldMaxMana);
+}
+
+void UAuraAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnergy) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Energy, OldEnergy);
+}
+
+void UAuraAttributeSet::OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxEnergy, OldMaxEnergy);
 }
 

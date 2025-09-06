@@ -25,6 +25,8 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	UAuraAttributeSet();
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Health);
@@ -42,6 +44,14 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana);
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Energy, Category = "Vital Attributes")
+	FGameplayAttributeData Energy;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Energy);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergy, Category = "Vital Attributes")
+	FGameplayAttributeData MaxEnergy;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxEnergy);
+
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
 	UFUNCTION()
@@ -50,6 +60,9 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	void OnRep_Mana(const FGameplayAttributeData& OldMana) const;
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const;
+	UFUNCTION()
+	void OnRep_Energy(const FGameplayAttributeData& OldEnergy) const;
+	UFUNCTION()
+	void OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy) const;
 	
 };
-

@@ -14,6 +14,9 @@ void UOverlayWidgetController::BroadcastInitialValues()
 	
 	OnManaChanged.Broadcast(AuraAttributeSet->GetMana());
 	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
+
+	OnEnergyChanged.Broadcast(AuraAttributeSet->GetEnergy());
+	OnMaxEnergyChanged.Broadcast(AuraAttributeSet->GetMaxEnergy());
 }
 
 void UOverlayWidgetController::BindCallbackToDependencies()
@@ -25,6 +28,9 @@ void UOverlayWidgetController::BindCallbackToDependencies()
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetEnergyAttribute()).AddUObject(this, &UOverlayWidgetController::EnergyChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxEnergyAttribute()).AddUObject(this, &UOverlayWidgetController::MaxEnergyChanged);
 }
 
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
@@ -45,4 +51,14 @@ void UOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) c
 void UOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxManaChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::EnergyChanged(const FOnAttributeChangeData& Data) const
+{
+	OnEnergyChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::MaxEnergyChanged(const FOnAttributeChangeData& Data) const
+{
+	OnMaxEnergyChanged.Broadcast(Data.NewValue);
 }
