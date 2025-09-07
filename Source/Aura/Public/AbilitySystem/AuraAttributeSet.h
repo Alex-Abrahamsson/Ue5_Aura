@@ -71,13 +71,13 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Energy, Category = "Vital Attributes")
-	FGameplayAttributeData Energy;
-	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Energy);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Stamina, Category = "Vital Attributes")
+	FGameplayAttributeData Stamina;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Stamina);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergy, Category = "Vital Attributes")
-	FGameplayAttributeData MaxEnergy;
-	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxEnergy);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStamina, Category = "Vital Attributes")
+	FGameplayAttributeData MaxStamina;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxStamina);
 
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
@@ -88,9 +88,9 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const;
 	UFUNCTION()
-	void OnRep_Energy(const FGameplayAttributeData& OldEnergy) const;
+	void OnRep_Stamina(const FGameplayAttributeData& OldStamina) const;
 	UFUNCTION()
-	void OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy) const;
+	void OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina) const;
 
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;

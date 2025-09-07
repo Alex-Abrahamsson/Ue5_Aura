@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/OverlayWidgetController.h"
 
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
@@ -15,8 +16,8 @@ void UOverlayWidgetController::BroadcastInitialValues()
 	OnManaChanged.Broadcast(AuraAttributeSet->GetMana());
 	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
 
-	OnEnergyChanged.Broadcast(AuraAttributeSet->GetEnergy());
-	OnMaxEnergyChanged.Broadcast(AuraAttributeSet->GetMaxEnergy());
+	OnStaminaChanged.Broadcast(AuraAttributeSet->GetStamina());
+	OnMaxStaminaChanged.Broadcast(AuraAttributeSet->GetMaxStamina());
 }
 
 void UOverlayWidgetController::BindCallbackToDependencies()
@@ -29,8 +30,19 @@ void UOverlayWidgetController::BindCallbackToDependencies()
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetEnergyAttribute()).AddUObject(this, &UOverlayWidgetController::EnergyChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxEnergyAttribute()).AddUObject(this, &UOverlayWidgetController::MaxEnergyChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetStaminaAttribute()).AddUObject(this, &UOverlayWidgetController::StaminaChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxStaminaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxStaminaChanged);
+
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+		[](const FGameplayTagContainer& AssetTags)
+		{
+			for (auto Tag : AssetTags)
+			{
+				const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, Msg);
+			}
+		}
+	);
 }
 
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
@@ -53,12 +65,12 @@ void UOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data
 	OnMaxManaChanged.Broadcast(Data.NewValue);
 }
 
-void UOverlayWidgetController::EnergyChanged(const FOnAttributeChangeData& Data) const
+void UOverlayWidgetController::StaminaChanged(const FOnAttributeChangeData& Data) const
 {
-	OnEnergyChanged.Broadcast(Data.NewValue);
+	OnStaminaChanged.Broadcast(Data.NewValue);
 }
 
-void UOverlayWidgetController::MaxEnergyChanged(const FOnAttributeChangeData& Data) const
+void UOverlayWidgetController::MaxStaminaChanged(const FOnAttributeChangeData& Data) const
 {
-	OnMaxEnergyChanged.Broadcast(Data.NewValue);
+	OnMaxStaminaChanged.Broadcast(Data.NewValue);
 }
