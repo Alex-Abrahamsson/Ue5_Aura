@@ -54,6 +54,28 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	/*
+	 * Primary Attributes
+	 */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category = "Primary Attributes")
+	FGameplayAttributeData Strength;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Strength);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Dexterity, Category = "Primary Attributes")
+	FGameplayAttributeData Dexterity;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Dexterity);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Vitality, Category = "Primary Attributes")
+	FGameplayAttributeData Vitality;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Vitality);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Energy, Category = "Primary Attributes")
+	FGameplayAttributeData Energy;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Energy);
+	
+	/*
+	 * Vital Attributes
+	 */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Health);
@@ -61,7 +83,6 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes")
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxHealth);
-	
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Vital Attributes")
 	FGameplayAttributeData Mana;
@@ -78,7 +99,7 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStamina, Category = "Vital Attributes")
 	FGameplayAttributeData MaxStamina;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxStamina);
-
+	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
 	UFUNCTION()
@@ -91,6 +112,15 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	void OnRep_Stamina(const FGameplayAttributeData& OldStamina) const;
 	UFUNCTION()
 	void OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina) const;
+
+	UFUNCTION()
+	void OnRep_Strength(const FGameplayAttributeData& OldStrength) const;
+	UFUNCTION()
+	void OnRep_Dexterity(const FGameplayAttributeData& OldDexterity) const;
+	UFUNCTION()
+	void OnRep_Vitality(const FGameplayAttributeData& OldVitality) const;
+	UFUNCTION()
+	void OnRep_Energy(const FGameplayAttributeData& OldEnergy) const;
 
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
