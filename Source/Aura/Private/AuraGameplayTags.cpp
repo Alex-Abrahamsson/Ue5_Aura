@@ -57,4 +57,26 @@ void FAuraGameplayTags::InitializeGameplayTags()
 
     GameplayTags.Attributes_Secondary_StaminaRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(
         FName("Attributes.Secondary.StaminaRegeneration"), FString("Rate at which stamina regenerates over time"));
+
+    // Input Tags
+    GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
+        FName("InputTag.LMB"), FString("Input tag for left mouse button"));
+
+    GameplayTags.InputTag_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
+        FName("InputTag.RMB"), FString("Input tag for right mouse button"));
+
+    GameplayTags.InputTag_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+        FName("InputTag.1"), FString("Input tag for key 1"));
+
+    GameplayTags.InputTag_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+        FName("InputTag.2"), FString("Input tag for key 2"));
+
+    GameplayTags.InputTag_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+        FName("InputTag.3"), FString("Input tag for key 3"));
+
+    GameplayTags.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+        FName("InputTag.4"), FString("Input tag for key 4"));
+
+    GameplayTags.InputTag_5 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+        FName("InputTag.5"), FString("Input tag for key 5"));
 }
