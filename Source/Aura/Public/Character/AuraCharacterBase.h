@@ -7,6 +7,7 @@
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
+#include "MotionWarpingComponent.h"
 #include "AuraCharacterBase.generated.h"
 
 class UGameplayEffect;
@@ -34,6 +35,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Motion Warping")
+	UMotionWarpingComponent* MotionWarping;
+
+
+	
 	virtual FVector GetCombatSocketLocation() override;
 
 	UPROPERTY()
