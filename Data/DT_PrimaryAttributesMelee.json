@@ -1,0 +1,22 @@
+[
+    {
+        "Name": "Attributes.Primary.Strength",
+        "1": 15,
+        "99": 250
+    },
+    {
+        "Name": "Attributes.Primary.Energy",
+        "1": 5,
+        "99": 50
+    },
+    {
+        "Name": "Attributes.Primary.Dexterity",
+        "1": 10,
+        "99": 100
+    },
+    {
+        "Name": "Attributes.Primary.Vitality",
+        "1": 12,
+        "99": 300
+    }
+]
