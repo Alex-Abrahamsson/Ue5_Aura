@@ -14,6 +14,7 @@ class UGameplayEffect;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayAbility;
+class UAnimMontage;
 
 // Abstract förhindrar att man kan dra in denna klass i UE5
 UCLASS(Abstract)
@@ -26,6 +27,12 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributSet; }
 
+	virtual UAnimMontage* GetHitMontage_Implementation() override;
+	virtual void Die() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -67,4 +74,7 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };
