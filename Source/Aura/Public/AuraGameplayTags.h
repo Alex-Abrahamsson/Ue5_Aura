@@ -44,6 +44,8 @@ public:
 	FGameplayTag InputTag_4;
 	FGameplayTag InputTag_5;
 
+	FGameplayTag Damage;
+
 private:
 	static FAuraGameplayTags GameplayTags;
 };
