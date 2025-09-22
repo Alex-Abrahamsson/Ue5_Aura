@@ -10,9 +10,10 @@
 #include "NavigationSystem.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
+#include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/EnemyInterface.h"
-#include "ProfilingDebugging/CookStats.h"
+#include "UI/Widget/DmgTextComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -178,6 +179,19 @@ void AAuraPlayerController::SetupInputComponent()
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 	
+}
+
+void AAuraPlayerController::ShowDmgNumber_Implementation(float DmgAmount, ACharacter* TargetCharacter)
+{
+	if (IsValid(TargetCharacter) && DmgTextComponentClass)
+	{
+		UDmgTextComponent* DmgText = NewObject<UDmgTextComponent>(TargetCharacter, DmgTextComponentClass);
+		DmgText->RegisterComponent();
+		DmgText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		DmgText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		DmgText->SetDmgText(DmgAmount);
+		
+	}
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
