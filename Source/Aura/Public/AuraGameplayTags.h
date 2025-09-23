@@ -35,6 +35,19 @@ public:
 	FGameplayTag Attributes_Secondary_HealthRegeneration;
 	FGameplayTag Attributes_Secondary_ManaRegeneration;
 	FGameplayTag Attributes_Secondary_StaminaRegeneration;
+	//Diablo2
+	FGameplayTag Attributes_Secondary_Evasion;
+	FGameplayTag Attributes_Secondary_AttackRating;
+	FGameplayTag Attributes_Secondary_DefenseRating;
+	FGameplayTag Attributes_Secondary_FreezeImmunity;
+	FGameplayTag Attributes_Secondary_StunResistance;
+	FGameplayTag Attributes_Secondary_LifeSteal;
+	FGameplayTag Attributes_Secondary_ManaSteal;
+	FGameplayTag Attributes_Secondary_FireResistance;
+	FGameplayTag Attributes_Secondary_ColdResistance;
+	FGameplayTag Attributes_Secondary_LightningResistance;
+	FGameplayTag Attributes_Secondary_PoisonResistance;
+	FGameplayTag Attributes_Secondary_MagicResistance;
 
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
@@ -45,8 +58,23 @@ public:
 	FGameplayTag InputTag_5;
 
 	FGameplayTag Damage;
+	//Diablo 2
+	FGameplayTag Damage_Fire;
+	FGameplayTag Damage_Cold;
+	FGameplayTag Damage_Lightning;
+	FGameplayTag Damage_Poison;
+	FGameplayTag Damage_Physical;
+	FGameplayTag Damage_Magic;
+
 
 	FGameplayTag Effects_HitReact;
+	// Diablo 2
+	FGameplayTag Effects_Poisoned;
+	FGameplayTag Effects_Frozen;
+	FGameplayTag Effects_Slowed;
+	FGameplayTag Effects_Stunned;
+	FGameplayTag Effects_Burning;
+
 
 private:
 	static FAuraGameplayTags GameplayTags;
