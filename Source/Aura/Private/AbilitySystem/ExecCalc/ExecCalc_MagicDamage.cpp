@@ -6,33 +6,40 @@
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
-struct AuraDamageStatics
+struct AuraMagicDamageStatics
 {
-	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor);
-	DECLARE_ATTRIBUTE_CAPTUREDEF(ArmorPenetration);
-	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(FireResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(ColdResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(PoisonResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(LightningResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(MagicResistance);
 	
-	AuraDamageStatics()
+	AuraMagicDamageStatics()
 	{
 		//Target
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, Armor, Target, false);
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, FireResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ColdResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, PoisonResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, LightningResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, MagicResistance, Target, false);
 		// Source
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArmorPenetration, Source, false);
+		// DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArmorPenetration, Source, false);
 	}
 };
 
-static const AuraDamageStatics& DamageStatics()
+static const AuraMagicDamageStatics& DamageStatics()
 {
-	static AuraDamageStatics DStatics;
+	static AuraMagicDamageStatics DStatics;
 	return DStatics;
 }
 
 UExecCalc_MagicDamage::UExecCalc_MagicDamage()
 {
-	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
-	RelevantAttributesToCapture.Add(DamageStatics().ArmorPenetrationDef);
-	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().FireResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().ColdResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().PoisonResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().LightningResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().MagicResistanceDef);
 }
 
 // TODO: CHANGE THIS TO HANDLE MAGIC DAMAGE WITH RESISTANCES!!!
@@ -40,7 +47,7 @@ UExecCalc_MagicDamage::UExecCalc_MagicDamage()
 void UExecCalc_MagicDamage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
                                                    FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
-		const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
+	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
 	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
 	const AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
@@ -54,29 +61,60 @@ void UExecCalc_MagicDamage::Execute_Implementation(const FGameplayEffectCustomEx
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
-	// Get Damage Set By Caller Magnitude
-	float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
-	
-	// Capture blockChange on Target, And Determine if there was a block
-	float TargetBlockChance = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance);
-	TargetBlockChance = FMath::Max<float>(TargetBlockChance, 0.f);
-	// If block, Halve the damage
-	if (FMath::RandRange(1, 100) < TargetBlockChance) Damage *= 0.5f;
+	// Base damage from caller
+	const float BaseDamage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
 
-	// ArmorPenetration ignorse a percentage of targets armor
-	float TargetArmor = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, TargetArmor);
-	TargetArmor = FMath::Max<float>(TargetArmor, 0.f);
+	// Capture resistances
+	float TargetFireResist = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().FireResistanceDef, EvaluationParameters, TargetFireResist);
+	float TargetColdResist = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ColdResistanceDef, EvaluationParameters, TargetColdResist);
+	float TargetLightningResist = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().LightningResistanceDef, EvaluationParameters, TargetLightningResist);
+	float TargetPoisonResist = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().PoisonResistanceDef, EvaluationParameters, TargetPoisonResist);
+	float TargetMagicResist = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().MagicResistanceDef, EvaluationParameters, TargetMagicResist);
 
-	float SourceArmorPenetration = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetration);
-	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
+	// Total damage after resistances
+	float FinalDamage = 0.f;
+	// Apply each damage type if present
+	if (SourceTags->HasTag(FAuraGameplayTags::Get().Damage_Fire))
+	{
+		const float Multiplier = 1.f - (TargetFireResist / 100.f);
+		FinalDamage += BaseDamage * Multiplier;
+	}
+	if (SourceTags->HasTag(FAuraGameplayTags::Get().Damage_Cold))
+	{
+		const float Multiplier = 1.f - (TargetColdResist / 100.f);
+		FinalDamage += BaseDamage * Multiplier;
+	}
+	if (SourceTags->HasTag(FAuraGameplayTags::Get().Damage_Lightning))
+	{
+		const float Multiplier = 1.f - (TargetLightningResist / 100.f);
+		FinalDamage += BaseDamage * Multiplier;
+	}
+	if (SourceTags->HasTag(FAuraGameplayTags::Get().Damage_Poison))
+	{
+		const float Multiplier = 1.f - (TargetPoisonResist / 100.f);
+		FinalDamage += BaseDamage * Multiplier;
+	}
+	if (SourceTags->HasTag(FAuraGameplayTags::Get().Damage_Magic))
+	{
+		const float Multiplier = 1.f - (TargetMagicResist / 100.f);
+		FinalDamage += BaseDamage * Multiplier;
+	}
+	// Om ingen skadetagg finns, behandla som magic
+	if (FinalDamage == 0.f)
+	{
+		const float Multiplier = 1.f - (TargetMagicResist / 100.f);
+		FinalDamage = BaseDamage * Multiplier;
+	}
+	// Se till att skadan aldrig blir negativ
+	FinalDamage = FMath::Max(FinalDamage, 0.f);
 
-	const float EffectiveArmor = TargetArmor *= ( 100 - SourceArmorPenetration * 0.25f ) / 100.f;
-	Damage *= ( 100 - EffectiveArmor * 0.333f) / 100.f;
-
-	
-	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
+	// Applicera skadan
+	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, FinalDamage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
+

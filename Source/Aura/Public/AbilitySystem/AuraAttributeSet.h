@@ -114,6 +114,46 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	FGameplayAttributeData ManaRegeneration;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ManaRegeneration);
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegeneration, Category = "Secondary Attributes")
+	FGameplayAttributeData StaminaRegeneration;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, StaminaRegeneration);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AttackRating, Category = "Secondary Attributes")
+	FGameplayAttributeData AttackRating;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, AttackRating);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_DefenseRating, Category = "Secondary Attributes")
+	FGameplayAttributeData DefenseRating;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, DefenseRating);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LifeSteal, Category = "Secondary Attributes")
+	FGameplayAttributeData LifeSteal;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, LifeSteal);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaSteal, Category = "Secondary Attributes")
+	FGameplayAttributeData ManaSteal;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ManaSteal);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Secondary Attributes")
+	FGameplayAttributeData FireResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, FireResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ColdResistance, Category = "Secondary Attributes")
+	FGameplayAttributeData ColdResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ColdResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningResistance, Category = "Secondary Attributes")
+	FGameplayAttributeData LightningResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, LightningResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PoisonResistance, Category = "Secondary Attributes")
+	FGameplayAttributeData PoisonResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, PoisonResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicResistance, Category = "Secondary Attributes")
+	FGameplayAttributeData MagicResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MagicResistance);
+
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStamina, Category = "Vital Attributes")
 	FGameplayAttributeData MaxStamina;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxStamina);
@@ -180,6 +220,26 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 	void OnRep_HealthRegeneration(const FGameplayAttributeData& OldHealthRegeneration) const;
 	UFUNCTION()
 	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldManaRegeneration) const;
+	UFUNCTION()
+	void OnRep_StaminaRegeneration(const FGameplayAttributeData& OldStaminaRegeneration) const;
+	UFUNCTION()
+	void OnRep_AttackRating(const FGameplayAttributeData& OldAttackRating) const;
+	UFUNCTION()
+	void OnRep_DefenseRating(const FGameplayAttributeData& OldDefenseRating) const;
+	UFUNCTION()
+	void OnRep_LifeSteal(const FGameplayAttributeData& OldLifeSteal) const;
+	UFUNCTION()
+	void OnRep_ManaSteal(const FGameplayAttributeData& OldManaSteal) const;
+	UFUNCTION()
+	void OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const;
+	UFUNCTION()
+	void OnRep_ColdResistance(const FGameplayAttributeData& OldColdResistance) const;
+	UFUNCTION()
+	void OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const;
+	UFUNCTION()
+	void OnRep_PoisonResistance(const FGameplayAttributeData& OldPoisonResistance) const;
+	UFUNCTION()
+	void OnRep_MagicResistance(const FGameplayAttributeData& OldMagicResistance) const;
 	UFUNCTION()
 	void OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina) const;
 	UFUNCTION()

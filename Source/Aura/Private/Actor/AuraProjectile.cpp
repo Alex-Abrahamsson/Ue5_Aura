@@ -32,6 +32,7 @@ AAuraProjectile::AAuraProjectile()
 	ProjectileMovement->MaxSpeed = 550.f;
 	ProjectileMovement->ProjectileGravityScale = 0.f;
 
+
 	FireLoopAudio = CreateDefaultSubobject<UAudioComponent>("FireLoopAudio");
 	FireLoopAudio->SetupAttachment(RootComponent);
 	FireLoopAudio->bAutoActivate = false;
