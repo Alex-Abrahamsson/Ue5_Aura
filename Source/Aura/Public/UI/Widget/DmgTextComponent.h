@@ -15,5 +15,5 @@ class AURA_API UDmgTextComponent : public UWidgetComponent
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void SetDmgText(float Damage);
+	void SetDmgText(float Damage, bool bBlocked, bool bCriticalHit, bool bMiss);
 };

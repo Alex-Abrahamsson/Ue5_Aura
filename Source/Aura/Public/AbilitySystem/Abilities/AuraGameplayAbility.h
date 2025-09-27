@@ -19,9 +19,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category= "Input")
 	FGameplayTag StartupInputTag;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	FScalableFloat MinDamage;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	FScalableFloat MaxDamage;
+	UPROPERTY(EditDefaultsOnly, Category= "Skill")
+	FGameplayTag AbilityTypeTag;
 };

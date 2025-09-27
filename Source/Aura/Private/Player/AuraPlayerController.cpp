@@ -181,7 +181,7 @@ void AAuraPlayerController::SetupInputComponent()
 	
 }
 
-void AAuraPlayerController::ShowDmgNumber_Implementation(float DmgAmount, ACharacter* TargetCharacter)
+void AAuraPlayerController::ShowDmgNumber_Implementation(float DmgAmount, ACharacter* TargetCharacter, bool bBlocked, bool bCriticalHit, bool bMiss)
 {
 	if (IsValid(TargetCharacter) && DmgTextComponentClass)
 	{
@@ -189,7 +189,7 @@ void AAuraPlayerController::ShowDmgNumber_Implementation(float DmgAmount, AChara
 		DmgText->RegisterComponent();
 		DmgText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 		DmgText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		DmgText->SetDmgText(DmgAmount);
+		DmgText->SetDmgText(DmgAmount, bBlocked, bCriticalHit, bMiss);
 		
 	}
 }

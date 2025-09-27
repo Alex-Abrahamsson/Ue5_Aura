@@ -249,7 +249,7 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
-	void ShowFloatingText(const FEffectProperties& Props, float Damage) const;
+	void ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlocked, bool bCriticalHit, bool bMiss) const;
 	
 };
 

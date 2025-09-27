@@ -79,21 +79,24 @@ void FAuraGameplayTags::InitializeGameplayTags()
 	GameplayTags.Attributes_Secondary_ManaSteal = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Attributes.Secondary.ManaSteal"), FString("Restores mana based on damage dealt"));
 
-	GameplayTags.Attributes_Secondary_FireResistance = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.Secondary.FireResistance"), FString("Reduces damage taken from fire-based attacks"));
+	GameplayTags.Attributes_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Fire"), FString("Reduces damage taken from fire-based attacks"));
 
-	GameplayTags.Attributes_Secondary_ColdResistance = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.Secondary.ColdResistance"), FString("Reduces damage taken from cold-based attacks"));
+	GameplayTags.Attributes_Resistance_Cold = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Cold"), FString("Reduces damage taken from cold-based attacks"));
 
-	GameplayTags.Attributes_Secondary_LightningResistance = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.Secondary.LightningResistance"), FString("Reduces damage taken from lightning-based attacks"));
+	GameplayTags.Attributes_Resistance_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Lightning"), FString("Reduces damage taken from lightning-based attacks"));
 
-	GameplayTags.Attributes_Secondary_PoisonResistance = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.Secondary.PoisonResistance"), FString("Reduces damage taken from poison-based attacks"));
+	GameplayTags.Attributes_Resistance_Poison = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Poison"), FString("Reduces damage taken from poison-based attacks"));
 
-	GameplayTags.Attributes_Secondary_MagicResistance = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.Secondary.MagicResistance"), FString("Reduces damage taken from magic-based attacks"));
+	GameplayTags.Attributes_Resistance_Magic = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Magic"), FString("Reduces damage taken from magic-based attacks"));
 
+	GameplayTags.Attributes_Resistance_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Resistance.Physical"), FString("Reduces damage taken from physical-based attacks"));
+	
 	// Input Tags
 	GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("InputTag.LMB"), FString("Input tag for left mouse button"));
@@ -119,11 +122,7 @@ void FAuraGameplayTags::InitializeGameplayTags()
 	// Damage Types
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Damage"), FString("Generic damage"));
-	GameplayTags.Damage_Type_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Damage.Type.Melee"), FString("Melee damage"));
-	GameplayTags.Damage_Type_Spell = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Damage.Type.Spell"), FString("Spell damage"));
-
+	
 	GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Damage.Fire"), FString("Fire-based damage"));
 
@@ -141,6 +140,20 @@ void FAuraGameplayTags::InitializeGameplayTags()
 
 	GameplayTags.Damage_Magic = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Damage.Magic"), FString("Magic-based damage"));
+
+	// SKillTypes
+	GameplayTags.SkillType_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("SkillType.Melee"), FString("Melee skill"));
+	GameplayTags.SkillType_Spell = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("SkillType.Spell"), FString("Spell skill"));
+	GameplayTags.SkillType_Ranged = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("SkillType.Ranged"), FString("Ranged skill"));
+
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Fire, GameplayTags.Attributes_Resistance_Fire);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Cold, GameplayTags.Attributes_Resistance_Cold);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Lightning, GameplayTags.Attributes_Resistance_Lightning);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Poison, GameplayTags.Attributes_Resistance_Poison);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Physical, GameplayTags.Attributes_Resistance_Physical);
 
 	// Effects
 	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(

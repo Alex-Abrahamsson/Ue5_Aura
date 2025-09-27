@@ -43,11 +43,12 @@ public:
 	FGameplayTag Attributes_Secondary_StunResistance;
 	FGameplayTag Attributes_Secondary_LifeSteal;
 	FGameplayTag Attributes_Secondary_ManaSteal;
-	FGameplayTag Attributes_Secondary_FireResistance;
-	FGameplayTag Attributes_Secondary_ColdResistance;
-	FGameplayTag Attributes_Secondary_LightningResistance;
-	FGameplayTag Attributes_Secondary_PoisonResistance;
-	FGameplayTag Attributes_Secondary_MagicResistance;
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Cold;
+	FGameplayTag Attributes_Resistance_Lightning;
+	FGameplayTag Attributes_Resistance_Poison;
+	FGameplayTag Attributes_Resistance_Magic;
+	FGameplayTag Attributes_Resistance_Physical;
 
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
@@ -58,8 +59,6 @@ public:
 	FGameplayTag InputTag_5;
 
 	FGameplayTag Damage;
-	FGameplayTag Damage_Type_Melee;
-	FGameplayTag Damage_Type_Spell;
 	//Diablo 2
 	FGameplayTag Damage_Fire;
 	FGameplayTag Damage_Cold;
@@ -67,6 +66,12 @@ public:
 	FGameplayTag Damage_Poison;
 	FGameplayTag Damage_Physical;
 	FGameplayTag Damage_Magic;
+
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+
+	FGameplayTag SkillType_Melee;
+	FGameplayTag SkillType_Spell;
+	FGameplayTag SkillType_Ranged;
 
 
 	FGameplayTag Effects_HitReact;

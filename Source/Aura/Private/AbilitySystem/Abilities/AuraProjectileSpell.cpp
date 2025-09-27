@@ -14,7 +14,7 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTagContainer& ProjectileTags)
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	
 	bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
@@ -47,20 +47,27 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		EffectContextHandle.AddActors(Actors);
 		FHitResult HitResult;
 		EffectContextHandle.AddHitResult(HitResult);
+
 		
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
-		if (!ProjectileTags.IsEmpty())
+		if (AbilityTypeTag.IsValid())
 		{
-			for (const FGameplayTag& Tag : ProjectileTags)
-			{
-				SpecHandle.Data->AddDynamicAssetTag(Tag);
-			}
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AbilityTypeTag, 1.f);
 		}
+
 		
 		const FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
-		const float ScaledRandomDamage = FMath::RandRange(MinDamage.GetValueAtLevel(GetAbilityLevel()), MaxDamage.GetValueAtLevel(GetAbilityLevel()));
 
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, ScaledRandomDamage);
+		for (const auto& Pair : DamageRanges)
+		{
+			const float MinValue = Pair.Value.MinDamage.GetValueAtLevel(GetAbilityLevel());
+			const float MaxValue = Pair.Value.MaxDamage.GetValueAtLevel(GetAbilityLevel());
+			const float FinalDamage = FMath::RandRange(MinValue, MaxValue);
+
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, FinalDamage);
+		}
+		
+		
 		Projectile->DamageEffectHandle = SpecHandle;
 		
 		Projectile->FinishSpawning(SpawnTransform);
