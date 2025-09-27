@@ -119,6 +119,10 @@ void FAuraGameplayTags::InitializeGameplayTags()
 	// Damage Types
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Damage"), FString("Generic damage"));
+	GameplayTags.Damage_Type_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage.Type.Melee"), FString("Melee damage"));
+	GameplayTags.Damage_Type_Spell = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage.Type.Spell"), FString("Spell damage"));
 
 	GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Damage.Fire"), FString("Fire-based damage"));

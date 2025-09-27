@@ -58,6 +58,8 @@ public:
 	FGameplayTag InputTag_5;
 
 	FGameplayTag Damage;
+	FGameplayTag Damage_Type_Melee;
+	FGameplayTag Damage_Type_Spell;
 	//Diablo 2
 	FGameplayTag Damage_Fire;
 	FGameplayTag Damage_Cold;

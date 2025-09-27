@@ -29,8 +29,8 @@ struct AuraMagicDamageStatics
 
 static const AuraMagicDamageStatics& DamageStatics()
 {
-	static AuraMagicDamageStatics DStatics;
-	return DStatics;
+	static AuraMagicDamageStatics DMagicStatics;
+	return DMagicStatics;
 }
 
 UExecCalc_MagicDamage::UExecCalc_MagicDamage()

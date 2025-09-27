@@ -5,21 +5,30 @@
 
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
+#include "Interaction/CombatInterface.h"
 
 struct AuraDamageStatics
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(ArmorPenetration);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitChance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitDamage);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitResistance);
 	
 	AuraDamageStatics()
 	{
 		//Target
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, Armor, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CriticalHitResistance, Target, false);
 		// Source
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArmorPenetration, Source, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CriticalHitChance, Source, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CriticalHitDamage, Source, false);
 	}
 };
 
@@ -34,6 +43,9 @@ UExecClac_Damage::UExecClac_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorPenetrationDef);
 	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitDamageDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef);
 }
 
 void UExecClac_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
@@ -42,41 +54,92 @@ void UExecClac_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
 	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
-	const AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
-	const AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
+	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
+	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
+	ICombatInterface* SourceCombat = Cast<ICombatInterface>(SourceAvatar);
+	ICombatInterface* TargetCombat = Cast<ICombatInterface>(TargetAvatar);
 
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
-
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
-	FAggregatorEvaluateParameters EvaluationParameters;
-	EvaluationParameters.SourceTags = SourceTags;
-	EvaluationParameters.TargetTags = TargetTags;
 
-	// Get Damage Set By Caller Magnitude
-	float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
-	
-	// Capture blockChange on Target, And Determine if there was a block
-	float TargetBlockChance = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance);
-	TargetBlockChance = FMath::Max<float>(TargetBlockChance, 0.f);
-	// If block, Halve the damage
-	if (FMath::RandRange(1, 100) < TargetBlockChance) Damage *= 0.5f;
+	FAggregatorEvaluateParameters EvalParams;
+	EvalParams.SourceTags = SourceTags;
+	EvalParams.TargetTags = TargetTags;
 
-	// ArmorPenetration ignorse a percentage of targets armor
-	float TargetArmor = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, TargetArmor);
-	TargetArmor = FMath::Max<float>(TargetArmor, 0.f);
+	const UCharacterClassInfo* ClassInfo = UAuraAbilitySystemLibrary::GetCharacterClassInfo(SourceAvatar);
+	const FAuraGameplayTags Tags = FAuraGameplayTags::Get();
 
-	float SourceArmorPenetration = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetration);
-	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
+	const bool bIsSpell = SourceTags->HasTag(Tags.Damage_Type_Spell);
+	const bool bIsMelee = SourceTags->HasTag(Tags.Damage_Type_Melee);
 
-	const float EffectiveArmor = TargetArmor *= ( 100 - SourceArmorPenetration * 0.25f ) / 100.f;
-	Damage *= ( 100 - EffectiveArmor * 0.333f) / 100.f;
+	// 1. Base Damage
+	float Damage = Spec.GetSetByCallerMagnitude(Tags.Damage);
 
-	
+	// 2. Shared Attributes
+	float CritChance = GetAttribute(ExecutionParams, DamageStatics().CriticalHitChanceDef, EvalParams);
+	float CritBonus = GetAttribute(ExecutionParams, DamageStatics().CriticalHitDamageDef, EvalParams);
+	float CritResist = GetAttributeBonus(ExecutionParams, DamageStatics().CriticalHitResistanceDef, EvalParams);
+	float CritResistCoeff = ClassInfo->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"), FString())->Eval(TargetCombat->GetPlayerLevel());
+	float EffectiveCritChance = FMath::Clamp(CritChance - CritResist * CritResistCoeff, 0.f, 100.f);
+	bool bCrit = FMath::RandRange(1, 100) <= EffectiveCritChance;
+
+	// 3. Melee-specific
+	if (bIsMelee)
+	{
+		float BlockChance = GetAttribute(ExecutionParams, DamageStatics().BlockChanceDef, EvalParams);
+		bool bBlocked = FMath::RandRange(1, 100) <= BlockChance;
+
+		if (bBlocked)
+		{
+			Damage *= 0.1f;
+		}
+		else if (bCrit)
+		{
+			Damage = Damage * 2.0f + CritBonus;
+		}
+
+		// Armor Reduction
+		float Armor = GetAttribute(ExecutionParams, DamageStatics().ArmorDef, EvalParams);
+		float ArmorPen = GetAttribute(ExecutionParams, DamageStatics().ArmorPenetrationDef, EvalParams);
+		float ArmorPenCoeff = ClassInfo->DamageCalculationCoefficients->FindCurve(FName("ArmorPenetration"), FString())->Eval(SourceCombat->GetPlayerLevel());
+		float ArmorCoeff = ClassInfo->DamageCalculationCoefficients->FindCurve(FName("EffectiveArmor"), FString())->Eval(TargetCombat->GetPlayerLevel());
+
+		float ArmorIgnored = ArmorPen * ArmorPenCoeff;
+		float EffectiveArmor = Armor * (100.f - ArmorIgnored) / 100.f;
+		float ArmorReduction = EffectiveArmor * ArmorCoeff;
+		Damage *= (100.f - ArmorReduction) / 100.f;
+	}
+
+	// 4. Spell-specific
+	else if (bIsSpell)
+	{
+		// Spells ignorerar block och armor
+		if (bCrit)
+		{
+			Damage = Damage * 2.0f + CritBonus;
+		}
+		// Du kan lägga till elemental resist här om du vill
+	}
+
+	// 5. Apply
 	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
-	
 }
+
+
+float UExecClac_Damage::GetAttribute(const FGameplayEffectCustomExecutionParameters& Params, const FGameplayEffectAttributeCaptureDefinition& Def, const FAggregatorEvaluateParameters& Eval)
+{
+	float Value = 0.f;
+	Params.AttemptCalculateCapturedAttributeMagnitude(Def, Eval, Value);
+	return FMath::Max(Value, 0.f);
+}
+
+float UExecClac_Damage::GetAttributeBonus(const FGameplayEffectCustomExecutionParameters& Params, const FGameplayEffectAttributeCaptureDefinition& Def, const FAggregatorEvaluateParameters& Eval)
+{
+	float Value = 0.f;
+	Params.AttemptCalculateCapturedAttributeBonusMagnitude(Def, Eval, Value);
+	return FMath::Max(Value, 0.f);
+}
+
+
