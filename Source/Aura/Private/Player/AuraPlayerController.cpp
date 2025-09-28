@@ -183,7 +183,7 @@ void AAuraPlayerController::SetupInputComponent()
 
 void AAuraPlayerController::ShowDmgNumber_Implementation(float DmgAmount, ACharacter* TargetCharacter, bool bBlocked, bool bCriticalHit, bool bMiss)
 {
-	if (IsValid(TargetCharacter) && DmgTextComponentClass)
+	if (IsValid(TargetCharacter) && DmgTextComponentClass && IsLocalController())
 	{
 		UDmgTextComponent* DmgText = NewObject<UDmgTextComponent>(TargetCharacter, DmgTextComponentClass);
 		DmgText->RegisterComponent();
