@@ -21,4 +21,6 @@ public:
 
 	static float GetAttribute(const FGameplayEffectCustomExecutionParameters& Params, const FGameplayEffectAttributeCaptureDefinition& Def, const FAggregatorEvaluateParameters& Eval);
 	static float GetAttributeBonus(const FGameplayEffectCustomExecutionParameters& Params, const FGameplayEffectAttributeCaptureDefinition& Def, const FAggregatorEvaluateParameters& Eval);
+
+	FGameplayEffectAttributeCaptureDefinition GetResistanceDef(const FGameplayTag& ResTag) const;
 };
