@@ -27,7 +27,7 @@ struct AuraMagicDamageStatics
 	}
 };
 
-static const AuraMagicDamageStatics& DamageStatics()
+static const AuraMagicDamageStatics& MagicDamageStatics()
 {
 	static AuraMagicDamageStatics DMagicStatics;
 	return DMagicStatics;
@@ -35,11 +35,11 @@ static const AuraMagicDamageStatics& DamageStatics()
 
 UExecCalc_MagicDamage::UExecCalc_MagicDamage()
 {
-	RelevantAttributesToCapture.Add(DamageStatics().FireResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().ColdResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().PoisonResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().LightningResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().MagicResistanceDef);
+	RelevantAttributesToCapture.Add(MagicDamageStatics().FireResistanceDef);
+	RelevantAttributesToCapture.Add(MagicDamageStatics().ColdResistanceDef);
+	RelevantAttributesToCapture.Add(MagicDamageStatics().PoisonResistanceDef);
+	RelevantAttributesToCapture.Add(MagicDamageStatics().LightningResistanceDef);
+	RelevantAttributesToCapture.Add(MagicDamageStatics().MagicResistanceDef);
 }
 
 // TODO: CHANGE THIS TO HANDLE MAGIC DAMAGE WITH RESISTANCES!!!
@@ -66,15 +66,15 @@ void UExecCalc_MagicDamage::Execute_Implementation(const FGameplayEffectCustomEx
 
 	// Capture resistances
 	float TargetFireResist = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().FireResistanceDef, EvaluationParameters, TargetFireResist);
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(MagicDamageStatics().FireResistanceDef, EvaluationParameters, TargetFireResist);
 	float TargetColdResist = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ColdResistanceDef, EvaluationParameters, TargetColdResist);
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(MagicDamageStatics().ColdResistanceDef, EvaluationParameters, TargetColdResist);
 	float TargetLightningResist = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().LightningResistanceDef, EvaluationParameters, TargetLightningResist);
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(MagicDamageStatics().LightningResistanceDef, EvaluationParameters, TargetLightningResist);
 	float TargetPoisonResist = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().PoisonResistanceDef, EvaluationParameters, TargetPoisonResist);
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(MagicDamageStatics().PoisonResistanceDef, EvaluationParameters, TargetPoisonResist);
 	float TargetMagicResist = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().MagicResistanceDef, EvaluationParameters, TargetMagicResist);
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(MagicDamageStatics().MagicResistanceDef, EvaluationParameters, TargetMagicResist);
 
 	// Total damage after resistances
 	float FinalDamage = 0.f;
