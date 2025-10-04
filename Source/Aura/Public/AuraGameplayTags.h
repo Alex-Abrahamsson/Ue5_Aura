@@ -67,6 +67,8 @@ public:
 	FGameplayTag Damage_Physical;
 	FGameplayTag Damage_Magic;
 
+	FGameplayTag Abilities_Attack;
+
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 
 	FGameplayTag SkillType_Melee;

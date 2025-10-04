@@ -141,6 +141,10 @@ void FAuraGameplayTags::InitializeGameplayTags()
 	GameplayTags.Damage_Magic = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Damage.Magic"), FString("Magic-based damage"));
 
+	// Abilities
+	GameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Abilities.Attack"), FString("Attack ability tag"));
+
 	// SKillTypes
 	GameplayTags.SkillType_Melee = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("SkillType.Melee"), FString("Melee skill"));
