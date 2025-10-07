@@ -32,6 +32,8 @@ public:
 	/* Combat Interface */
 	virtual int32 GetPlayerLevel() override;
 	virtual void Die() override;
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
 	/* Combat Interface */
 
 	UPROPERTY(BlueprintAssignable)
@@ -50,6 +52,9 @@ public:
 	float Lifespan = 5.f;
 
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
+	UPROPERTY(BlueprintReadWrite, Category="Combat")
+	TObjectPtr<AActor> CombatTarget;
 
 protected:
 	virtual void BeginPlay() override;
