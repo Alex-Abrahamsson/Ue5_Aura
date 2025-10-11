@@ -26,12 +26,17 @@ public:
 	AAuraCharacterBase();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributSet; }
-
-	virtual UAnimMontage* GetHitMontage_Implementation() override;
-	virtual void Die() override;
-
+	
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
+
+	// Combat interface
+	virtual UAnimMontage* GetHitMontage_Implementation() override;
+	virtual void Die() override;
+	virtual FVector GetCombatSocketLocation_Implementation() override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation();
+	// END ===================
 	
 protected:
 	virtual void BeginPlay() override;
@@ -42,13 +47,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
 
+	bool bDead = false;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Motion Warping")
 	UMotionWarpingComponent* MotionWarping;
-
-
 	
-	virtual FVector GetCombatSocketLocation_Implementation() override;
-
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
