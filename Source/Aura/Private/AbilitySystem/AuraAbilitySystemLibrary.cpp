@@ -167,3 +167,16 @@ void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 		}
 	}
 }
+
+bool UAuraAbilitySystemLibrary::IsNotFriend(AActor* SourceActor, AActor* TargetActor)
+{
+	const bool bSourceIsPlayer = SourceActor->ActorHasTag(FName("Player"));
+	const bool bTargetIsPlayer = TargetActor->ActorHasTag(FName("Player"));
+	const bool bSourceIsEnemy = SourceActor->ActorHasTag(FName("Enemy"));
+	const bool bTargetIsEnemy = TargetActor->ActorHasTag(FName("Enemy"));
+
+	// De är fiender om de har olika "team" (en är spelare, andra är fiende)
+	return (bSourceIsPlayer && bTargetIsEnemy) || (bSourceIsEnemy && bTargetIsPlayer);
+
+
+}

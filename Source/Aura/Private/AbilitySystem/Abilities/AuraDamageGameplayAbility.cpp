@@ -15,9 +15,10 @@ void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 		const float MinScaledDamage = Pair.Value.MinDamage.GetValueAtLevel(GetAbilityLevel());
 		const float MaxScaledDamage = Pair.Value.MaxDamage.GetValueAtLevel(GetAbilityLevel());
 
-		// Skicka in båda som SetByCaller med olika taggar
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, MinScaledDamage);
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, MaxScaledDamage);
+		// Slumpa ett värde mellan min och max
+		const float RandomDamage = FMath::RandRange(MinScaledDamage, MaxScaledDamage);
+		
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, RandomDamage);
 	}
 
 	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(
