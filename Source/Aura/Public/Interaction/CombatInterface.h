@@ -58,7 +58,4 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	TArray<FTaggedMontage> GetAttackMontages();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	FTaggedMontage GetRandomMontage(const TArray<FTaggedMontage>& InAttackMontages);
 };

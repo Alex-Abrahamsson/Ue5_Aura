@@ -98,22 +98,6 @@ TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
 	return AttackMontages;
 }
 
-FTaggedMontage AAuraCharacterBase::GetRandomMontage_Implementation(const TArray<FTaggedMontage>& InAttackMontages)
-{
-	if (AttackMontages.Num() == 0)
-	{
-		return FTaggedMontage();
-	}
-	
-	if (AttackMontages.Num() == 1)
-	{
-		return AttackMontages[0];
-	}
-	
-	int RandomIndex = FMath::RandRange(0, AttackMontages.Num() - 1);
-	return AttackMontages[RandomIndex];
-}
-
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 	

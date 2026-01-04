@@ -37,7 +37,6 @@ public:
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation();
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
-	virtual FTaggedMontage GetRandomMontage_Implementation(const TArray<FTaggedMontage>& InAttackMontages) override;
 	// END ===================
 
 
