@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
 #include "MotionWarpingComponent.h"
+#include "NiagaraSystem.h"
 #include "AuraCharacterBase.generated.h"
 
 class UGameplayEffect;
@@ -35,8 +36,9 @@ public:
 	virtual void Die() override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	virtual bool IsDead_Implementation() const override;
-	virtual AActor* GetAvatar_Implementation();
+	virtual AActor* GetAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	// END ===================
 
 
@@ -46,7 +48,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
@@ -96,6 +98,9 @@ protected:
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UNiagaraSystem* BloodEffect;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
