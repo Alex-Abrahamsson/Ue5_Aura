@@ -59,12 +59,10 @@ void AAuraProjectile::Destroyed()
 {
 	if (!bHit && !HasAuthority())
 	{
-		if (FireLoopAudio && FireLoopAudio->IsPlaying())
-		{
-			FireLoopAudio->Stop();
-		}
+		if (FireLoopAudio && FireLoopAudio->IsPlaying()) FireLoopAudio->Stop();
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation(), FRotator::ZeroRotator);
+		bHit = true;
 	}
 	Super::Destroyed();
 }
@@ -79,12 +77,10 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 	if (!bHit)
 	{
-		if (FireLoopAudio && FireLoopAudio->IsPlaying())
-		{
-			FireLoopAudio->Stop();
-		}
+		if (FireLoopAudio && FireLoopAudio->IsPlaying()) FireLoopAudio->Stop();
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation(), FRotator::ZeroRotator);
+		bHit = true;
 	}
 	
 	if (HasAuthority())
