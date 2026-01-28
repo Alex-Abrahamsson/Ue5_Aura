@@ -6,6 +6,7 @@
 #include "AuraGameplayTags.h"
 #include "GameplayEffectTypes.h"
 #include "GameFramework/Actor.h"
+#include "Components/PointLightComponent.h"
 #include "AuraProjectile.generated.h"
 
 class UNiagaraSystem;
@@ -49,6 +50,18 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	TObjectPtr<USoundBase> FireLoopSound;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	bool bUseLight = true;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	TObjectPtr<UPointLightComponent> PointLight;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	FLinearColor LightColor = FLinearColor(1.0f, 0.5f, 0.1f);
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	float LightIntensity = 30000.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	TObjectPtr<UNiagaraSystem> ImpactEffect;

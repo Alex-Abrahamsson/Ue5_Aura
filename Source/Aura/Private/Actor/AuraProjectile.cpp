@@ -12,6 +12,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Aura/Aura.h"
+#include "Components/PointLightComponent.h"
 
 
 AAuraProjectile::AAuraProjectile()
@@ -40,6 +41,13 @@ AAuraProjectile::AAuraProjectile()
 	FireLoopAudio->bIsUISound = false;
 	FireLoopAudio->bAllowSpatialization = true;
 
+	PointLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLight"));
+	PointLight->SetupAttachment(RootComponent);
+	PointLight->AttenuationRadius = 800.0f;  // Ljus-reach
+	PointLight->SourceRadius = 50.0f;        // Soft edges
+	PointLight->CastShadows = true;          // Skuggor (Lumen)
+	PointLight->SetMobility(EComponentMobility::Movable);  // Dynamiskt
+	PointLight->SetVisibility(false);
 }
 
 void AAuraProjectile::BeginPlay()
@@ -53,6 +61,14 @@ void AAuraProjectile::BeginPlay()
 		FireLoopAudio->Play();
 	}
 
+	if (PointLight)
+	{
+		PointLight->Intensity = LightIntensity;
+		PointLight->LightColor = LightColor.ToFColor(true);
+		PointLight->SetVisibility(bUseLight);
+	}
+
+
 }
 
 void AAuraProjectile::Destroyed()
@@ -60,6 +76,7 @@ void AAuraProjectile::Destroyed()
 	if (!bHit && !HasAuthority())
 	{
 		if (FireLoopAudio && FireLoopAudio->IsPlaying()) FireLoopAudio->Stop();
+		if (PointLight) PointLight->SetVisibility(false);
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation(), FRotator::ZeroRotator);
 		bHit = true;
@@ -78,6 +95,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	if (!bHit)
 	{
 		if (FireLoopAudio && FireLoopAudio->IsPlaying()) FireLoopAudio->Stop();
+		if (PointLight) PointLight->SetVisibility(false);
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation(), FRotator::ZeroRotator);
 		bHit = true;
