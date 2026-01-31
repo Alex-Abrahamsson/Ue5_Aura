@@ -67,9 +67,28 @@ public:
 	FGameplayTag Damage_Physical;
 	FGameplayTag Damage_Magic;
 
+	/* Ability Tags */
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
 	FGameplayTag Abilities_Fire_FireBolt;
+	/* Cooldown Tags */
+	FGameplayTag Cooldown_Cold_Blizzard;
+	FGameplayTag Cooldown_Cold_Frozen_Orb;
+	FGameplayTag Cooldown_Fire_Firewall;
+	FGameplayTag Cooldown_Fire_Meteor;
+	FGameplayTag Cooldown_Poison_Poison_Javelin;
+	FGameplayTag Cooldown_Poison_Plague_Javelin;
+	FGameplayTag Cooldown_Fire_Immolation_Arrow;
+	FGameplayTag Cooldown_Summon_Valkyrie;
+	FGameplayTag Cooldown_Shadow_Shadow_Warrior;
+	FGameplayTag Cooldown_Shadow_Shadow_Master;
+	FGameplayTag Cooldown_Lightning_Shock_Web;
+	FGameplayTag Cooldown_Trap_Blade_Sentinel;
+	FGameplayTag Cooldown_Fire_Firestorm;
+	FGameplayTag Cooldown_Fire_Molten_Boulder;
+	FGameplayTag Cooldown_Fire_Fissure;
+	FGameplayTag Cooldown_Fire_Volcano;
+	FGameplayTag Cooldown_Holy_Fist_of_the_Heavens;
 
 	FGameplayTag CombatSocket_Weapon;
 	FGameplayTag CombatSocket_RightHand;

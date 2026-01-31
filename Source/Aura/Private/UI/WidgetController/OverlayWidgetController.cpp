@@ -101,13 +101,13 @@ void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemCo
 
 	if (!AuraAbilitySystemComponent->bStartupAbilitiesGiven) return;
 
-	FForEachAbility BrodcastDelegate;
-	BrodcastDelegate.BindLambda([this, AuraAbilitySystemComponent](const FGameplayAbilitySpec& AbilitySpec)
+	FForEachAbility BroadcastDelegate;
+	BroadcastDelegate.BindLambda([this, AuraAbilitySystemComponent](const FGameplayAbilitySpec& AbilitySpec)
 	{
 		FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AuraAbilitySystemComponent->GetAbilityTagFromSpec(AbilitySpec));
 		Info.InputTag = AuraAbilitySystemComponent->GetInputTagFromSpec(AbilitySpec);
 		AbilityInfoDelegate.Broadcast(Info);
 	});
 
-	AuraAbilitySystemComponent->ForeEachAbility(BrodcastDelegate);
+	AuraAbilitySystemComponent->ForeEachAbility(BroadcastDelegate);
 }

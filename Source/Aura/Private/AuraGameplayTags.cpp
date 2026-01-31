@@ -149,6 +149,43 @@ void FAuraGameplayTags::InitializeGameplayTags()
 	GameplayTags.Abilities_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Abilities.Fire.FireBolt"), FString("Firebolt ability tag"));
 
+	// Cooldowns
+	GameplayTags.Cooldown_Cold_Blizzard = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Cold.Blizzard"), FString("Cooldown for Blizzard skill"));
+	GameplayTags.Cooldown_Cold_Frozen_Orb = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Cold.Frozen_Orb"), FString("Cooldown for Frozen Orb skill"));
+	GameplayTags.Cooldown_Fire_Firewall = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Fire.Firewall"), FString("Cooldown for Firewall skill"));
+	GameplayTags.Cooldown_Fire_Meteor = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Fire.Meteor"), FString("Cooldown for Meteor skill"));
+	GameplayTags.Cooldown_Poison_Poison_Javelin = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Poison.Poison_Javelin"), FString("Cooldown for Poison Javelin skill"));
+	GameplayTags.Cooldown_Poison_Plague_Javelin = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Poison.Plague_Javelin"), FString("Cooldown for Plague Javelin skill"));
+	GameplayTags.Cooldown_Fire_Immolation_Arrow = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Fire.Immolation_Arrow"), FString("Cooldown for Immolation Arrow skill"));
+	GameplayTags.Cooldown_Summon_Valkyrie = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Summon.Valkyrie"), FString("Cooldown for Valkyrie skill"));
+	GameplayTags.Cooldown_Shadow_Shadow_Warrior = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Shadow.Shadow_Warrior"), FString("Cooldown for Shadow Warrior skill"));
+	GameplayTags.Cooldown_Shadow_Shadow_Master = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Shadow.Shadow_Master"), FString("Cooldown for Shadow Master skill"));
+	GameplayTags.Cooldown_Lightning_Shock_Web = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Lightning.Shock_Web"), FString("Cooldown for Shock Web skill"));
+	GameplayTags.Cooldown_Trap_Blade_Sentinel = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Trap.Blade_Sentinel"), FString("Cooldown for Blade Sentinel skill"));
+	GameplayTags.Cooldown_Fire_Firestorm = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Fire.Firestorm"), FString("Cooldown for Firestorm skill"));
+	GameplayTags.Cooldown_Fire_Molten_Boulder = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Fire.Molten_Boulder"), FString("Cooldown for Molten Boulder skill"));
+	GameplayTags.Cooldown_Fire_Fissure = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Fire.Fissure"), FString("Cooldown for Fissure skill"));
+	GameplayTags.Cooldown_Fire_Volcano = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Fire.Volcano"), FString("Cooldown for Volcano skill"));
+	GameplayTags.Cooldown_Holy_Fist_of_the_Heavens = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	    FName("Cooldown.Holy.Fist_of_the_Heavens"), FString("Cooldown for Fist of the Heavens skill"));
+
+	// Combat socket
 	GameplayTags.CombatSocket_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("CombatSocket.Weapon"), FString("Weapon"));
 	GameplayTags.CombatSocket_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
