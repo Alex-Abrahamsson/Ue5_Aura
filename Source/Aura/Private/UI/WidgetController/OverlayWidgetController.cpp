@@ -6,6 +6,8 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
+#include "AbilitySystem/Data/LevelUpInfo.h"
+#include "Player/AuraPlayerState.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -23,8 +25,10 @@ void UOverlayWidgetController::BroadcastInitialValues()
 
 void UOverlayWidgetController::BindCallbackToDependencies()
 {
+	AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	AuraPlayerState->OnXPChangedDelegate.AddUObject(this, &UOverlayWidgetController::OnXPChanged);
+	
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
-
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda(
 		[this] (const FOnAttributeChangeData& Data)
 		{
@@ -110,4 +114,27 @@ void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemCo
 	});
 
 	AuraAbilitySystemComponent->ForeEachAbility(BroadcastDelegate);
+}
+
+void UOverlayWidgetController::OnXPChanged(int32 NewXp) const
+{
+	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	const ULevelUpInfo* LevelUpInfo = AuraPlayerState->LevelUpInfo;
+	checkf(LevelUpInfo, TEXT("Unable to find Levelup info, Please fill out AuraPlayerstate Blueprint"));
+
+	int32 Level = LevelUpInfo->FindLevelForXp(NewXp);
+	const int32 MaxLevel = LevelUpInfo->LevelUpInformation.Num();
+
+	if (Level <= MaxLevel && Level > 0)
+	{
+		const int32 LevelUpRequirement = LevelUpInfo->LevelUpInformation[Level].LevelUpRequirement;
+		const int32 PreviousLevelUpRequirement = LevelUpInfo->LevelUpInformation[Level - 1].LevelUpRequirement;
+
+		const int32 DeltaLevelRequirement = LevelUpRequirement - PreviousLevelUpRequirement;
+		const int32 XpForThisLevel = NewXp - PreviousLevelUpRequirement;
+
+		const float XPBarPrecent = static_cast<float>(XpForThisLevel) / static_cast<float>(DeltaLevelRequirement);
+
+		OnXpPercentChangeDelegate.Broadcast(XPBarPrecent);
+	}
 }
