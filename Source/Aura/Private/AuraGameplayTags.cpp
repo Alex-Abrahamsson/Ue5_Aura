@@ -96,6 +96,10 @@ void FAuraGameplayTags::InitializeGameplayTags()
 
 	GameplayTags.Attributes_Resistance_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Attributes.Resistance.Physical"), FString("Reduces damage taken from physical-based attacks"));
+
+	// Meta Attibutes
+	GameplayTags.Attributes_Meta_IncomingXP = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Meta.IncomingXP"), FString("IncomingXp"));
 	
 	// Input Tags
 	GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(

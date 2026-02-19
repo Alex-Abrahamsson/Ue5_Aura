@@ -8,7 +8,7 @@
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
 #include "MotionWarpingComponent.h"
-#include "NiagaraSystem.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "AuraCharacterBase.generated.h"
 
 class UGameplayEffect;
@@ -43,6 +43,7 @@ public:
 	virtual int32 GetMinionCount_Implementation() override;
 	virtual void IncreaseMinionCount_Implementation(int32 Amount) override;
 	virtual void DecrementMinionCount_Implementation(int32 Amount) override;
+	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	// END ===================
 
 
@@ -114,9 +115,15 @@ protected:
 	// Minions
 	int32 MinionCount = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
+	ECharacterClass CharacterClass = ECharacterClass::Melee;
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;

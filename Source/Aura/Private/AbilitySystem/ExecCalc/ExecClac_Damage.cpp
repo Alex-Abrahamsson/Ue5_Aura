@@ -77,8 +77,17 @@ void UExecClac_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
     AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
     AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
-    ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar);
-    ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
+
+	int32 SourcePlayerLevel = 1;
+	if (SourceAvatar->Implements<UCombatInterface>())
+	{
+		SourcePlayerLevel = ICombatInterface::Execute_GetPlayerLevel(SourceAvatar);
+	}
+	int32 TargetPlayerLevel = 1;
+	if (TargetAvatar->Implements<UCombatInterface>())
+	{
+		TargetPlayerLevel = ICombatInterface::Execute_GetPlayerLevel(TargetAvatar);
+	}
 
     const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 
@@ -108,7 +117,7 @@ void UExecClac_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
     float CritChance = GetAttribute(ExecutionParams, DamageStatics().CriticalHitChanceDef, EvaluationParameters);
     float CritBonus = GetAttribute(ExecutionParams, DamageStatics().CriticalHitDamageDef, EvaluationParameters);
     float CritResist = GetAttributeBonus(ExecutionParams, DamageStatics().CriticalHitResistanceDef, EvaluationParameters);
-    float CritResistCoeff = ClassInfo->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"), FString())->Eval(TargetCombatInterface->GetPlayerLevel());
+    float CritResistCoeff = ClassInfo->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"), FString())->Eval(SourcePlayerLevel);
     float EffectiveCritChance = FMath::Clamp(CritChance - CritResist * CritResistCoeff, 0.f, 100.f);
     bool bCrit = FMath::RandRange(1, 100) <= EffectiveCritChance;
     UAuraAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bCrit);
@@ -154,8 +163,8 @@ void UExecClac_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
     {
         float Armor = GetAttribute(ExecutionParams, DamageStatics().ArmorDef, EvaluationParameters);
         float ArmorPen = GetAttribute(ExecutionParams, DamageStatics().ArmorPenetrationDef, EvaluationParameters);
-        float ArmorPenCoeff = ClassInfo->DamageCalculationCoefficients->FindCurve(FName("ArmorPenetration"), FString())->Eval(SourceCombatInterface->GetPlayerLevel());
-        float ArmorCoeff = ClassInfo->DamageCalculationCoefficients->FindCurve(FName("EffectiveArmor"), FString())->Eval(TargetCombatInterface->GetPlayerLevel());
+        float ArmorPenCoeff = ClassInfo->DamageCalculationCoefficients->FindCurve(FName("ArmorPenetration"), FString())->Eval(SourcePlayerLevel);
+        float ArmorCoeff = ClassInfo->DamageCalculationCoefficients->FindCurve(FName("EffectiveArmor"), FString())->Eval(TargetPlayerLevel);
 
         float ArmorIgnored = ArmorPen * ArmorPenCoeff;
         float EffectiveArmor = Armor * (100.f - ArmorIgnored) / 100.f;

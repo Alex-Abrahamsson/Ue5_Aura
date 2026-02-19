@@ -43,12 +43,16 @@ public:
 	FGameplayTag Attributes_Secondary_StunResistance;
 	FGameplayTag Attributes_Secondary_LifeSteal;
 	FGameplayTag Attributes_Secondary_ManaSteal;
+	
 	FGameplayTag Attributes_Resistance_Fire;
 	FGameplayTag Attributes_Resistance_Cold;
 	FGameplayTag Attributes_Resistance_Lightning;
 	FGameplayTag Attributes_Resistance_Poison;
 	FGameplayTag Attributes_Resistance_Magic;
 	FGameplayTag Attributes_Resistance_Physical;
+
+	//Meta Attributes
+	FGameplayTag Attributes_Meta_IncomingXP;
 
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
